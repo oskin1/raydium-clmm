@@ -587,6 +587,37 @@ pub fn handle_program_instruction(
             }
             println!("{:#?}", OpenPosition::from(ix));
         }
+        instruction::OpenPositionWithToken22Nft::DISCRIMINATOR => {
+            let ix = decode_instruction::<instruction::OpenPositionWithToken22Nft>(&mut ix_data).unwrap();
+            #[derive(Debug, serde::Serialize)]
+            pub struct OpenPositionWithToken22Nft {
+                pub tick_lower_index: i32,
+                pub tick_upper_index: i32,
+                pub tick_array_lower_start_index: i32,
+                pub tick_array_upper_start_index: i32,
+                pub liquidity: u128,
+                pub amount_0_max: u64,
+                pub amount_1_max: u64,
+                pub base_flag: Option<bool>,
+                pub with_metadata: bool,
+            }
+            impl From<instruction::OpenPositionWithToken22Nft> for OpenPositionWithToken22Nft {
+                fn from(instr: instruction::OpenPositionWithToken22Nft) -> OpenPositionWithToken22Nft {
+                    OpenPositionWithToken22Nft {
+                        tick_lower_index: instr.tick_lower_index,
+                        tick_upper_index: instr.tick_upper_index,
+                        tick_array_lower_start_index: instr.tick_array_lower_start_index,
+                        tick_array_upper_start_index: instr.tick_array_upper_start_index,
+                        liquidity: instr.liquidity,
+                        amount_0_max: instr.amount_0_max,
+                        amount_1_max: instr.amount_1_max,
+                        base_flag: instr.base_flag,
+                        with_metadata: instr.with_metadata,
+                    }
+                }
+            }
+            println!("OpenPositionWithToken22Nft;{}", serde_json::to_string(&OpenPositionWithToken22Nft::from(ix)).unwrap());
+        }
         instruction::OpenPositionV2::DISCRIMINATOR => {
             let ix = decode_instruction::<instruction::OpenPositionV2>(&mut ix_data).unwrap();
             #[derive(Debug)]
@@ -767,7 +798,7 @@ pub fn handle_program_instruction(
             println!("{:#?}", SwapRouterBaseIn::from(ix));
         }
         _ => {
-            println!("unknow instruction: {}", instr_data);
+            println!("unknown instruction: {}", instr_data);
         }
     }
     Ok(())
